@@ -48,20 +48,20 @@ router.get('/profile', (req,res) => {
 */
 //http://127.0.0.1:8081/login
 router.post('/login', urlencodepasser, function (req,res)  {
+  
   fs.readFile('user.json','utf8',(err,data) => {
-    response = {
-      user_name:req.body.user_name,
-      password:req.body.password
-    }
+   
+    const username = req.body.user_name
+    const password = req.body.password
     const readData = JSON.parse(data);
-    if(readData.name == user_name){
+    if(readData.username == username){
       if(readData.password == password){
-
+        res.json({ status: true, message: 'User is valid' });
       } else {
-
+        res.json({ status: false, message: 'Password is invalid' });
       }
     } else {
-      
+      res.json({ status: false, message: 'User Name is invalid' });
     }
   })
 });
@@ -70,8 +70,15 @@ router.post('/login', urlencodepasser, function (req,res)  {
 - Modify /logout route to accept username as parameter and display message
     in HTML format like <b>${username} successfully logout.<b>
 */
-router.get('/logout', (req,res) => {
-  res.send('This is logout router');
+//http://127.0.0.1:8081/logout/bert
+router.get('/logout/:username', (req,res) => {
+  const username = req.params.username;
+  res.send(`<b>${username} successfully logged out.</b>`);
+});
+
+router.get('/error', (req, res, next) => {
+  const err = new Error('Test error'); 
+  next(err); 
 });
 
 /*
@@ -79,7 +86,8 @@ Add error handling middleware to handle below error
 - Return 500 page with message "Server Error"
 */
 app.use((err,req,res,next) => {
-  res.send('This is error router');
+  console.error(err);
+  res.status(500).send('Server Error');  
 });
 
 app.use('/', router);
