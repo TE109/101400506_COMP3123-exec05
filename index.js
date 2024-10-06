@@ -46,13 +46,23 @@ router.get('/profile', (req,res) => {
         message: "Password is invalid"
     }
 */
+//http://127.0.0.1:8081/login
 router.post('/login', urlencodepasser, function (req,res)  {
   fs.readFile('user.json','utf8',(err,data) => {
     response = {
       user_name:req.body.user_name,
       password:req.body.password
     }
-    
+    const readData = JSON.parse(data);
+    if(readData.name == user_name){
+      if(readData.password == password){
+
+      } else {
+
+      }
+    } else {
+      
+    }
   })
 });
 
