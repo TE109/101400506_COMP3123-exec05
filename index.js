@@ -1,6 +1,9 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const router = express.Router();
+var fs = require('fs');
+var bodyParser = require('body-parser');
+var urlencodepasser = bodyParser.urlencoded({extends: false})
 
 
 app.use(express.static('public'));
@@ -9,16 +12,19 @@ app.use(express.static('public'));
 - add <h1> tag with message "Welcome to ExpressJs Tutorial"
 - Return home.html page to client
 */
+// http://127.0.0.1:8081/home
 router.get('/home', (req,res) => {
-  res.send('This is home router');
-  res.sendFile(__dirname + "/" + "home.html")
+  res.sendFile(__dirname + "/" + "home.html");
 });
 
 /*
 - Return all details from user.json file to client as JSON format
 */
+// http://127.0.0.1:8081/profile
 router.get('/profile', (req,res) => {
-  res.send('This is profile router');
+  fs.readFile('user.json','utf8',(err,data) => {
+    res.send(JSON.parse(data))
+  })
 });
 
 /*
@@ -40,8 +46,14 @@ router.get('/profile', (req,res) => {
         message: "Password is invalid"
     }
 */
-router.post('/login', (req,res) => {
-  res.send('This is login router');
+router.post('/login', urlencodepasser, function (req,res)  {
+  fs.readFile('user.json','utf8',(err,data) => {
+    response = {
+      user_name:req.body.user_name,
+      password:req.body.password
+    }
+    
+  })
 });
 
 /*
